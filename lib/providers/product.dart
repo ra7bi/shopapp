@@ -28,7 +28,6 @@ class Product with ChangeNotifier {
 
   void toggleFavoritesStatus(){
     isFavorite = !isFavorite;
-    print("Changed ===> ${isFavorite}");
     //Tell all Listeners if the object changed 
     notifyListeners();
   }

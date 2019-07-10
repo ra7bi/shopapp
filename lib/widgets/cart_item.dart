@@ -30,7 +30,7 @@ class CartItem extends StatelessWidget {
         direction: DismissDirection.endToStart,
 
         onDismissed: (direction){
-          //False because we dont want to rebuild after notifying others 
+          //False because we don't want to rebuild after notifying others 
           Provider.of<Cart>(context,listen: false).deleteItem(mapKey);
 
         },
@@ -43,12 +43,12 @@ class CartItem extends StatelessWidget {
                 child: CircleAvatar(
               child: Padding(
                 padding: const EdgeInsets.all(3),
-                child: FittedBox(child: Text("\$ ${price}")),
+                child: FittedBox(child: Text("\$ $price")),
               ),
             )),
             title: Text(title),
             subtitle: Text("Total:  \$${price * quantity}"),
-            trailing: Text("X ${quantity}",style: TextStyle(fontSize: 10),),
+            trailing: Text("X $quantity",style: TextStyle(fontSize: 10),),
           ),
         ),
       ),
