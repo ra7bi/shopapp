@@ -55,9 +55,11 @@ class ProductItem extends StatelessWidget {
               },
               color: Theme.of(context).accentColor,
             ),
-            title: Text(
-              " - ${_product.title}",
-              textAlign: TextAlign.center,
+            title: FittedBox(
+                          child: Text(
+                " - ${_product.title}",
+                textAlign: TextAlign.center,
+              ),
             )),
       ),
     );

@@ -19,13 +19,21 @@ class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    return {...items}; // Get a copy of items
+    return {..._items}; // Get a copy of _items map 
   }
+
 
   int get itemCount{
 
     return _items.length ;
 
+  }
+  double get totalAmount{
+    var total = 0.0;
+    _items.forEach((key, cartItem){
+      total += cartItem.price * cartItem.quantity; 
+    });
+    return total;
   }
 
 
@@ -49,8 +57,14 @@ class Cart with ChangeNotifier {
               price: price,
               quantity: 1));
     }
-
+    print("Added");
     notifyListeners();
+  }
+
+  void deleteItem(String mapKey){
+      _items.remove(mapKey);
+      notifyListeners();
+
   }
 
 

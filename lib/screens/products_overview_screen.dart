@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
+import '../screens/cart_screen.dart';
 
 enum FilterOptions { Favorites, All }
 
@@ -18,7 +19,6 @@ void filterData(BuildContext conx) {}
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavoritesData = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 }
               });
             },
-            itemBuilder: (context) => [
+            itemBuilder: (_) => [
                   PopupMenuItem(
                     child: Text(
                       "Only Favorites",
@@ -50,34 +50,24 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                     ),
                     value: FilterOptions.All,
                   ),
-                  
                 ],
           ),
 
-                  //Consumer will rebuild the following widget only without parent tree 
-                  Consumer<Cart>(
-                    //TODO:: Explain how consumer works 
-                    //All which inside Builder will rebuilt 
-                    //ch will be automaticaly passed to the builder by flutter in our case IconButton 
-                    // will be passed in ch 
-
-                    // In general im passing IconButton to Badge widget with new cartObj
-                    // IconButton is static would not rebuilt again .
-                    builder: (_, cartObj, ch) =>
-                    Badge(
-                      value: cartObj.itemCount.toString(), 
-                      child: Icon(Icons.shopping_cart),
-                      ),
-                    child: IconButton(
-                      icon: Icon(Icons.shopping_cart),
-                      onPressed: () {
-
-                      },
-                    ),
-                  )
-
+          Consumer<Cart>(
+            builder: (_, cartObj, ch) => Badge(
+                  child: ch,
+                  value: cartObj.itemCount.toString(),
+                ),
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_basket
+                ),
+                 onPressed: (){
+                   Navigator.of(context).pushNamed(CartScreen.routeName);
+                 },
+            ),
+          )
         ],
-        
       ),
       body: ProductGrid(_showOnlyFavoritesData),
     );
