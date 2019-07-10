@@ -32,7 +32,7 @@ class CartItem extends StatelessWidget {
         onDismissed: (direction){
           //False because we dont want to rebuild after notifying others 
           Provider.of<Cart>(context,listen: false).deleteItem(mapKey);
-          print("Dismissed ${mapKey}");
+
         },
         child: Card(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
