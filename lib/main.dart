@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_detail.dart';
 
-//Provider 
+//Provider
 import './providers/products_provider.dart';
+import './providers/cart.dart';
 
 
 void main() => runApp(MyApp());
@@ -13,27 +14,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //Register to providers 
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Products(),
+        ),
+        ChangeNotifierProvider.value(
+          value:Cart()
+        )
+      ],
+      //All child's will be able to access all providers at the top 
 
-    //Register to provider 
-    return ChangeNotifierProvider(
-      //This provide object of Products
-        builder: (ctx)=>Products(),
-        
-        child: MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'MyShop',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato'
-        ),
+            primarySwatch: Colors.purple,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato'),
         home: ProductOverviewScreen(),
         routes: {
-          ProductDetail.routeName : (ctx) => ProductDetail(),
-
+          ProductDetail.routeName: (ctx) => ProductDetail(),
         },
       ),
     );
   }
 }
-
