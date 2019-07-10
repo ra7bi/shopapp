@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/product.dart';
 
 class ProductItem extends StatelessWidget {
-
+  
   @override
   Widget build(BuildContext context) {
 

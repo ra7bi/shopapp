@@ -5,11 +5,19 @@ import '../providers/products_provider.dart';
 
 enum FilterOptions { Favorites, All }
 
-class ProductOverviewScreen extends StatelessWidget {
+// I convert it to StatefulWidget because i dont want to affect other screen with this changes so i dont need notifier
+class ProductOverviewScreen extends StatefulWidget {
+  @override
+  _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+}
+
+void filterData(BuildContext conx) {}
+
+class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
+  var _showOnlyFavoritesData = false;
+
   @override
   Widget build(BuildContext context) {
-
-    final productContainer = Provider.of<Products>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,13 +26,13 @@ class ProductOverviewScreen extends StatelessWidget {
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             onSelected: (FilterOptions selectedValue) {
-              if (selectedValue == FilterOptions.Favorites) {
-                
-                productContainer.showFavoritesOnly();
-              } else {
-                productContainer.showAll();
-              }
-              print(selectedValue);
+              setState(() {
+                if (selectedValue == FilterOptions.Favorites) {
+                  _showOnlyFavoritesData = true;
+                } else {
+                  _showOnlyFavoritesData = false;
+                }
+              });
             },
             itemBuilder: (context) => [
                   PopupMenuItem(
@@ -43,7 +51,7 @@ class ProductOverviewScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ProductGrid(),
+      body: ProductGrid(_showOnlyFavoritesData),
     );
   }
 }

@@ -5,23 +5,20 @@ import '../providers/products_provider.dart';
 
 class ProductGrid extends StatelessWidget {
 
+  final bool  favoriteItem;
+
+  ProductGrid(this.favoriteItem);
+
   @override
   Widget build(BuildContext context) {
     // Listener , This mean we want to communicate with the provider
     final  productsData = Provider.of<Products>(context);
-    
-    final products = productsData.items;
-
-    print("-------->${products.length}");
+    final products = favoriteItem ? productsData.favoriteItems : productsData.items;
 
     return GridView.builder(
       padding: const EdgeInsets.all(10.0),
-      itemCount: productsData.items.length,
-
-      //TODO:: Need to setup a provider for each product in the Grid (Listener)
-      // Listen for any change in any object created from Product with ChangeNotifier
+      itemCount: products.length,
       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-            // Setup listenr for each product in products list 
             value: products[index],
             child: ProductItem(),
           ),
