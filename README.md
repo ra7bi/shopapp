@@ -20,7 +20,6 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
 
-![alt text](https://github.com/ra7bi/shopapp/blob/master/GithubImages/Screenshot_1562744884.png?raw=true)
 
 ![alt text](https://github.com/ra7bi/shopapp/blob/master/GithubImages/Screen%20Shot%202019-07-12%20at%201.53.50%20AM.png?raw=true)
 
