@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../screens/order_screen.dart';
-import '../screens/order_screen.dart';
 
 class MyAppDrawer extends StatelessWidget {
   @override
