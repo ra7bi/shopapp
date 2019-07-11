@@ -10,31 +10,53 @@ class CartItem extends StatelessWidget {
   final String title;
   final String mapKey;
 
-
-  CartItem({this.id, this.price, this.quantity, this.title,this.mapKey});
+  CartItem({this.id, this.price, this.quantity, this.title, this.mapKey});
 
   @override
   Widget build(BuildContext context) {
-
     return Dismissible(
       key: ValueKey(id),
       background: Container(
         color: Theme.of(context).errorColor,
-        child: Icon(Icons.delete,size: 40,color: Colors.white,),
+        child: Icon(
+          Icons.delete,
+          size: 40,
+          color: Colors.white,
+        ),
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 20),
         //Same like the Card below
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-        ),
-        //Right to left swiping 
-        direction: DismissDirection.endToStart,
-
-        onDismissed: (direction){
-          //False because we don't want to rebuild after notifying others 
-          Provider.of<Cart>(context,listen: false).deleteItem(mapKey);
-
-        },
-        child: Card(
+      ),
+      //Right to left swiping
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+       return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text("Are you sure ?"),
+                  content: Text("Do you want to remove item from the cart ?"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text("NO"),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text("YES"),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
+                ));
+      },
+      onDismissed: (direction) {
+        //False because we don't want to rebuild after notifying others
+        Provider.of<Cart>(context, listen: false).deleteItem(mapKey);
+      },
+      child: Card(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -48,7 +70,10 @@ class CartItem extends StatelessWidget {
             )),
             title: Text(title),
             subtitle: Text("Total:  \$${price * quantity}"),
-            trailing: Text("X $quantity",style: TextStyle(fontSize: 10),),
+            trailing: Text(
+              "X $quantity",
+              style: TextStyle(fontSize: 10),
+            ),
           ),
         ),
       ),
