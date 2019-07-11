@@ -5,16 +5,14 @@ import 'package:provider/provider.dart';
 import '../providers/product.dart';
 
 class ProductItem extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
-
     // Get object but i dont care about the change
-   final Product _product = Provider.of<Product>(context);
+    final Product _product = Provider.of<Product>(context);
 
-   // I dont want to change on this widgets  i want only to add , 
-   // cart widget should change not this
-   final Cart _cart = Provider.of<Cart>(context, listen: false);    
+    // I dont want to change on this widgets  i want only to add ,
+    // cart widget should change not this
+    final Cart _cart = Provider.of<Cart>(context, listen: false);
     // Rounded Border
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -27,36 +25,47 @@ class ProductItem extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             onTap: () => {
-                  Navigator.of(context)
-                      .pushNamed(ProductDetail.routeName, arguments: _product.id)
-                },
+              Navigator.of(context)
+                  .pushNamed(ProductDetail.routeName, arguments: _product.id)
+            },
           ),
         ),
         header: Text("\$${_product.price}"),
         footer: GridTileBar(
             backgroundColor: Colors.black87,
-            //Here i care about the change so i used consumer of Product notifier 
+            //Here i care about the change so i used consumer of Product notifier
             leading: Consumer<Product>(
-              builder: (context,product,_)=>IconButton(
-                //The icon get changed when provider send change notification 
-                icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              builder: (context, product, _) => IconButton(
+                //The icon get changed when provider send change notification
+                icon: Icon(product.isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border),
                 color: Theme.of(context).accentColor,
-                onPressed: () 
-                {
-                 product.toggleFavoritesStatus();
+                onPressed: () {
+                  product.toggleFavoritesStatus();
                 },
               ),
             ),
             trailing: IconButton(
               icon: Icon(Icons.shopping_cart),
               onPressed: () {
-             
-                _cart.addItem(_product.id,_product.price,_product.title);
+                _cart.addItem(_product.id, _product.price, _product.title);
+                Scaffold.of(context).hideCurrentSnackBar();
+                //Open connection to the nearest widget that control the page
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text("Added item to cart !"),
+                  duration: Duration(seconds: 2),
+                  action: SnackBarAction(label: "UNDO",  onPressed: (){
+
+                    _cart.removeSingleItem(_product.id);
+                    
+                  },),
+                ));
               },
               color: Theme.of(context).accentColor,
             ),
             title: FittedBox(
-                          child: Text(
+              child: Text(
                 " - ${_product.title}",
                 textAlign: TextAlign.center,
               ),
