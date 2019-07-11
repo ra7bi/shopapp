@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 //Import only Cart class not CartItem from cart.dart
 import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
+import '../providers/orders.dart';
+import '../screens/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
   static final routeName = 'cart/';
@@ -33,7 +35,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   Spacer(),
                   Chip(
-                    label: Text("\$ ${cart.totalAmount}",
+                    label: Text("\$ ${cart.totalAmount.toStringAsFixed(2)}",
                         style: TextStyle(
                             color: Theme.of(context).textTheme.title.color,
                             fontSize: 20)),
@@ -42,7 +44,12 @@ class CartScreen extends StatelessWidget {
                   FlatButton(
                     child: Text("Order now"),
                     onPressed: () {
-                      print("ORDER NOW");
+                      Provider.of<Orders>(context,listen: false).addOrder(
+                          cart.items.values.toList(),
+                          cart.totalAmount,
+                        );
+                        cart.clear();
+                        Navigator.of(context).pushNamed(OrderScreen.routeName);
                     },
                   ),
                 ],
