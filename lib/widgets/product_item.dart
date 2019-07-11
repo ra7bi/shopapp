@@ -53,7 +53,7 @@ class ProductItem extends StatelessWidget {
                 Scaffold.of(context).hideCurrentSnackBar();
                 //Open connection to the nearest widget that control the page
                 Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Added item to cart !"),
+                  content: Text("${_product.title} added to cart !"),
                   duration: Duration(seconds: 2),
                   action: SnackBarAction(label: "UNDO",  onPressed: (){
 
