@@ -1,6 +1,6 @@
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is my starting point for learning Flutter & Dart .
 
 ## This project include 
 - Custom widgets
