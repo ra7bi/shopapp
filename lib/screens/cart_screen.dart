@@ -1,78 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//Import only Cart class not CartItem from cart.dart
+
 import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
 import '../providers/orders.dart';
-import '../screens/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
-  static final routeName = 'cart/';
+  static const routeName = '/cart';
 
   @override
   Widget build(BuildContext context) {
-    //Get the provider
     final cart = Provider.of<Cart>(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Your cart"),
+        title: Text('Your Cart'),
       ),
       body: Column(
         children: <Widget>[
           Card(
             margin: EdgeInsets.all(15),
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Total Amount :  ",
-                      style: Theme.of(context).textTheme.body1),
-                  SizedBox(
-                    width: 10,
+                  Text(
+                    'Total',
+                    style: TextStyle(fontSize: 20),
                   ),
                   Spacer(),
                   Chip(
-                    label: Text("\$ ${cart.totalAmount.toStringAsFixed(2)}",
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.title.color,
-                            fontSize: 20)),
+                    label: Text(
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryTextTheme.title.color,
+                      ),
+                    ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   FlatButton(
-                    child: Text("Order now"),
+                    child: Text('ORDER NOW'),
                     onPressed: () {
-                      Provider.of<Orders>(context,listen: false).addOrder(
-                          cart.items.values.toList(),
-                          cart.totalAmount,
-                        );
-                        cart.clear();
-                        Navigator.of(context).pushNamed(OrderScreen.routeName);
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                        cart.items.values.toList(),
+                        cart.totalAmount,
+                      );
+                      cart.clear();
                     },
-                  ),
+                    textColor: Theme.of(context).primaryColor,
+                  )
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-                itemCount: cart.itemCount,
-                itemBuilder: (ctx, index) {
-                  return CartItem(
-                      id: cart.items.values.toList()[index].id,
-                      title: cart.items.values.toList()[index].title,
-                      price: cart.items.values.toList()[index].price,
-                      quantity: cart.items.values.toList()[index].quantity,
-                      //Passing the key of the map not the value
-                      mapKey: cart.items.keys.toList()[index],
-                      );
-                }),
-          ),
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, i) => CartItem(
+                    cart.items.values.toList()[i].id,
+                    cart.items.keys.toList()[i],
+                    cart.items.values.toList()[i].price,
+                    cart.items.values.toList()[i].quantity,
+                    cart.items.values.toList()[i].title,
+                  ),
+            ),
+          )
         ],
       ),
     );

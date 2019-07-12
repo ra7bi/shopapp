@@ -1,77 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/product_grid.dart';
+
+import '../widgets/app_drawer.dart';
+import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
-import '../screens/cart_screen.dart';
-import '../widgets/app_drawer.dart';
+import './cart_screen.dart';
 
-enum FilterOptions { Favorites, All }
-
-// I convert it to StatefulWidget because i dont want to affect other screen with this changes so i dont need notifier
-
-//This screen now will not intract with the provider or notifier  , Grid widget will do that .
-class ProductOverviewScreen extends StatefulWidget {
-  @override
-  _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+enum FilterOptions {
+  Favorites,
+  All,
 }
 
-void filterData(BuildContext conx) {}
+class ProductsOverviewScreen extends StatefulWidget {
+  @override
+  _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
+}
 
-class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-  var _showOnlyFavoritesData = false;
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+  var _showOnlyFavorites = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("MyShop"),
+        title: Text('MyShop'),
         actions: <Widget>[
           PopupMenuButton(
-            icon: Icon(Icons.more_vert),
             onSelected: (FilterOptions selectedValue) {
               setState(() {
                 if (selectedValue == FilterOptions.Favorites) {
-                  _showOnlyFavoritesData = true;
+                  _showOnlyFavorites = true;
                 } else {
-                  _showOnlyFavoritesData = false;
+                  _showOnlyFavorites = false;
                 }
               });
             },
+            icon: Icon(
+              Icons.more_vert,
+            ),
             itemBuilder: (_) => [
                   PopupMenuItem(
-                    child: Text(
-                      "Only Favorites",
-                    ),
+                    child: Text('Only Favorites'),
                     value: FilterOptions.Favorites,
                   ),
                   PopupMenuItem(
-                    child: Text(
-                      "Show all",
-                    ),
+                    child: Text('Show All'),
                     value: FilterOptions.All,
                   ),
                 ],
           ),
-
           Consumer<Cart>(
-            builder: (_, cartObj, ch) => Badge(
+            builder: (_, cart, ch) => Badge(
                   child: ch,
-                  value: cartObj.itemCount.toString(),
+                  value: cart.itemCount.toString(),
                 ),
             child: IconButton(
               icon: Icon(
-                Icons.shopping_basket
-                ),
-                 onPressed: (){
-                   Navigator.of(context).pushNamed(CartScreen.routeName);
-                 },
+                Icons.shopping_cart,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
             ),
-          )
+          ),
         ],
       ),
-      drawer: MyAppDrawer(),
-      body: ProductGrid(_showOnlyFavoritesData),
+      drawer: AppDrawer(),
+      body: ProductsGrid(_showOnlyFavorites),
     );
   }
 }

@@ -1,75 +1,78 @@
 import 'package:flutter/material.dart';
-import '../providers/cart.dart';
-import '../screens/product_detail.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
+import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
+  // final String id;
+  // final String title;
+  // final String imageUrl;
+
+  // ProductItem(this.id, this.title, this.imageUrl);
+
   @override
   Widget build(BuildContext context) {
-    // Get object but i dont care about the change
-    final Product _product = Provider.of<Product>(context);
-
-    // I dont want to change on this widgets  i want only to add ,
-    // cart widget should change not this
-    final Cart _cart = Provider.of<Cart>(context, listen: false);
-    // Rounded Border
+    final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: GestureDetector(
-            child: Image.network(
-              _product.imageUrl,
-              fit: BoxFit.cover,
-            ),
-            onTap: () => {
-              Navigator.of(context)
-                  .pushNamed(ProductDetail.routeName, arguments: _product.id)
-            },
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ProductDetailScreen.routeName,
+              arguments: product.id,
+            );
+          },
+          child: Image.network(
+            product.imageUrl,
+            fit: BoxFit.cover,
           ),
         ),
-        header: Text("\$${_product.price}"),
         footer: GridTileBar(
-            backgroundColor: Colors.black87,
-            //Here i care about the change so i used consumer of Product notifier
-            leading: Consumer<Product>(
-              builder: (context, product, _) => IconButton(
-                //The icon get changed when provider send change notification
-                icon: Icon(product.isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border),
-                color: Theme.of(context).accentColor,
-                onPressed: () {
-                  product.toggleFavoritesStatus();
-                },
-              ),
+          backgroundColor: Colors.black87,
+          leading: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+                  icon: Icon(
+                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  ),
+                  color: Theme.of(context).accentColor,
+                  onPressed: () {
+                    product.toggleFavoriteStatus();
+                  },
+                ),
+          ),
+          title: Text(
+            product.title,
+            textAlign: TextAlign.center,
+          ),
+          trailing: IconButton(
+            icon: Icon(
+              Icons.shopping_cart,
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.shopping_cart),
-              onPressed: () {
-                _cart.addItem(_product.id, _product.price, _product.title);
-                Scaffold.of(context).hideCurrentSnackBar();
-                //Open connection to the nearest widget that control the page
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("${_product.title} added to cart !"),
+            onPressed: () {
+              cart.addItem(product.id, product.price, product.title);
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Added item to cart!',
+                  ),
                   duration: Duration(seconds: 2),
-                  action: SnackBarAction(label: "UNDO",  onPressed: (){
-
-                    _cart.removeSingleItem(_product.id);
-                    
-                  },),
-                ));
-              },
-              color: Theme.of(context).accentColor,
-            ),
-            title: FittedBox(
-              child: Text(
-                " - ${_product.title}",
-                textAlign: TextAlign.center,
-              ),
-            )),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.removeSingleItem(product.id);
+                    },
+                  ),
+                ),
+              );
+            },
+            color: Theme.of(context).accentColor,
+          ),
+        ),
       ),
     );
   }

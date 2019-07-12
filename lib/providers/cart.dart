@@ -6,90 +6,89 @@ class CartItem {
   final int quantity;
   final double price;
 
-  CartItem(
-      {@required this.id,
-      @required this.title,
-      @required this.quantity,
-      @required this.price});
+  CartItem({
+    @required this.id,
+    @required this.title,
+    @required this.quantity,
+    @required this.price,
+  });
 }
 
 class Cart with ChangeNotifier {
-
-  //FIXME: YOU Must add {} to the map .
   Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
-    return {..._items}; // Get a copy of _items map 
+    return {..._items};
   }
 
-
-  int get itemCount{
-
-    return _items.length ;
-
+  int get itemCount {
+    return _items.length;
   }
-  double get totalAmount{
+
+  double get totalAmount {
     var total = 0.0;
-    _items.forEach((key, cartItem){
-      total += cartItem.price * cartItem.quantity; 
+    _items.forEach((key, cartItem) {
+      total += cartItem.price * cartItem.quantity;
     });
     return total;
   }
 
-
-  void addItem(String productId, double price, String title) {
+  void addItem(
+    String productId,
+    double price,
+    String title,
+  ) {
     if (_items.containsKey(productId)) {
-      //Will get existingCartItem
+      // change quantity...
       _items.update(
         productId,
         (existingCartItem) => CartItem(
-            id: existingCartItem.id,
-            title: existingCartItem.title,
-            price: existingCartItem.price,
-            quantity: existingCartItem.quantity + 1),
+              id: existingCartItem.id,
+              title: existingCartItem.title,
+              price: existingCartItem.price,
+              quantity: existingCartItem.quantity + 1,
+            ),
       );
     } else {
       _items.putIfAbsent(
-          productId,
-          () => CartItem(
+        productId,
+        () => CartItem(
               id: DateTime.now().toString(),
               title: title,
               price: price,
-              quantity: 1));
+              quantity: 1,
+            ),
+      );
     }
-    print("Added");
     notifyListeners();
   }
 
-  void deleteItem(String mapKey){
-      _items.remove(mapKey);
-      notifyListeners();
-
-  }
-
-void removeSingleItem(String key){
-
-  if(!_items.containsKey(key)){
-    return;
-  }
-
-  if(_items[key].quantity > 1){
-        _items.update(
-        key,
-        (existingCartItem) => CartItem(
-            id: _items[key].id,
-            title: _items[key].title,
-            price: _items[key].price,
-            quantity: _items[key].quantity - 1));
-  }else{
-    _items.remove(key);
-  }
-  notifyListeners();
-}
-  void clear(){
-    _items.clear();
+  void removeItem(String productId) {
+    _items.remove(productId);
     notifyListeners();
   }
 
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId].quantity > 1) {
+      _items.update(
+          productId,
+          (existingCartItem) => CartItem(
+                id: existingCartItem.id,
+                title: existingCartItem.title,
+                price: existingCartItem.price,
+                quantity: existingCartItem.quantity - 1,
+              ));
+    } else {
+      _items.remove(productId);
+    }
+    notifyListeners();
+  }
 
+  void clear() {
+    _items = {};
+    notifyListeners();
+  }
 }
